@@ -3,7 +3,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBRegressor
 
@@ -11,21 +10,17 @@ from xgboost import XGBRegressor
 raw_df = pd.read_csv("stroke_risk_dataset.csv")
 
 #create target datasets
-Binary_target = raw_df["At Risk (Binary)"]
+binary_target = raw_df["At Risk (Binary)"]
 risk_target = raw_df["Stroke Risk (%)"]
 
 #remove target columns from training dataset
 train = raw_df.drop(["At Risk (Binary)", "Stroke Risk (%)"], axis=1)
 
-#split train and test dataset for both case
-X_train, X_test, y_binary_train, y_binary_test = train_test_split(train, Binary_target, test_size=0.2, random_state=42)
-X_train, X_test, y_risk_train, y_risk_test = train_test_split(train, risk_target, test_size=0.2, random_state=42)
-
 #train RandomForestClassifier for classification
-RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(X_train, y_binary_train)
+RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(train, binary_target)
 
 #train XGBRegressor for regression 
-GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(X_train, y_risk_train)
+GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
 
 # Load your pre-trained models
 with open("RF_model.pkl", "rb") as rf_file:
