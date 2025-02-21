@@ -16,7 +16,7 @@ if os.path.exists(model_path):
     with open(model_path, "rb") as gb_file:
         GB_model = pickle.load(gb_file)
 else:
-    st.error("❌ Model file not found! Please train and save the model before running this app.")
+    st.error("❌ Oops! Model file not found! Please train and save the model before running this app.")
     st.stop()
 
 # 🌟 UI Improvements
@@ -24,7 +24,7 @@ st.markdown(
     """
     <div style="text-align:center;">
         <h1 style="color:#4A90E2;"> 🧠 Stroke Risk Prediction</h1>
-        <p style="font-size:18px;">Enter your health details below, and our AI will predict your stroke risk.</p>
+        <p style="font-size:18px;">Welcome! Please enter your health details below, and we'll help you assess your stroke risk.</p>
     </div>
     """,
     unsafe_allow_html=True
@@ -33,34 +33,36 @@ st.markdown(
 st.divider()
 
 # 💡 User-friendly Input Form
-st.subheader("📝 Patient Information")
+st.subheader("📝 Let's Get Your Information")
+
+st.write("Please provide the following details. If you're unsure about any symptoms, feel free to leave them unchecked.")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.slider("📅 Age (years)", min_value=18, max_value=100, value=30, step=1, help="Select your age.")
+    age = st.slider("📅 Your Age (years)", min_value=18, max_value=100, value=30, step=1, help="Select your age.")
 
-    st.markdown("**Health Symptoms** (Toggle if present)")
-    chest_pain = st.checkbox("❤️ Chest Pain", value=False, help="Do you experience any chest pain?")
-    shortness_of_breath = st.checkbox("💨 Shortness of Breath", value=False, help="Do you feel short of breath?")
-    irregular_heartbeat = st.checkbox("💓 Irregular Heartbeat", value=False, help="Do you have irregular heartbeats?")
-    fatigue = st.checkbox("😴 Fatigue & Weakness", value=False, help="Do you often feel fatigued or weak?")
-    dizziness = st.checkbox("🌀 Dizziness", value=False, help="Do you experience dizziness?")
-    swelling = st.checkbox("💧 Swelling (Edema)", value=False, help="Do you have swelling in your legs or feet?")
-    pain_neck = st.checkbox("🤕 Pain in Neck/Jaw/Shoulder/Back", value=False, help="Do you feel pain in your neck, jaw, shoulder, or back?")
+    st.markdown("**Do you currently experience any of the following symptoms?**")
+    chest_pain = st.checkbox("❤️ Chest Pain", value=False, help="Check this if you feel any chest pain.")
+    shortness_of_breath = st.checkbox("💨 Shortness of Breath", value=False, help="Check this if you feel short of breath.")
+    irregular_heartbeat = st.checkbox("💓 Irregular Heartbeat", value=False, help="Check this if your heartbeat feels irregular.")
+    fatigue = st.checkbox("😴 Fatigue or Weakness", value=False, help="Check this if you often feel tired or weak.")
+    dizziness = st.checkbox("🌀 Dizziness", value=False, help="Check this if you experience dizziness.")
+    swelling = st.checkbox("💧 Swelling in Legs or Feet", value=False, help="Check this if you have swelling in your legs or feet.")
+    pain_neck = st.checkbox("🤕 Pain in Neck/Jaw/Shoulder/Back", value=False, help="Check this if you feel pain in these areas.")
 
 with col2:
-    st.markdown("**Other Symptoms** (Toggle if present)")
-    sweating = st.checkbox("💦 Excessive Sweating", value=False, help="Do you sweat excessively?")
-    cough = st.checkbox("🤧 Persistent Cough", value=False, help="Do you have a persistent cough?")
-    nausea = st.checkbox("🤢 Nausea/Vomiting", value=False, help="Do you feel nauseous or have vomiting?")
-    high_bp = st.checkbox("🩸 High Blood Pressure", value=False, help="Have you been diagnosed with high blood pressure?")
-    chest_discomfort = st.checkbox("💔 Chest Discomfort (Activity)", value=False, help="Do you feel discomfort in your chest during physical activity?")
-    cold_hands = st.checkbox("❄️ Cold Hands/Feet", value=False, help="Do you have cold hands or feet?")
-    sleep_apnea = st.checkbox("😴 Snoring/Sleep Apnea", value=False, help="Do you snore or have sleep apnea?")
-    anxiety = st.checkbox("😟 Anxiety/Feeling of Doom", value=False, help="Do you feel anxious or have a feeling of doom?")
+    st.markdown("**And any of these symptoms?**")
+    sweating = st.checkbox("💦 Excessive Sweating", value=False, help="Check this if you sweat excessively.")
+    cough = st.checkbox("🤧 Persistent Cough", value=False, help="Check this if you have a cough that won't go away.")
+    nausea = st.checkbox("🤢 Nausea or Vomiting", value=False, help="Check this if you feel nauseous or have vomited.")
+    high_bp = st.checkbox("🩸 High Blood Pressure", value=False, help="Check this if you have been diagnosed with high blood pressure.")
+    chest_discomfort = st.checkbox("💔 Chest Discomfort during Activity", value=False, help="Check this if you feel discomfort during physical activity.")
+    cold_hands = st.checkbox("❄️ Cold Hands or Feet", value=False, help="Check this if your hands or feet feel cold.")
+    sleep_apnea = st.checkbox("😴 Snoring or Sleep Apnea", value=False, help="Check this if you snore or have sleep apnea.")
+    anxiety = st.checkbox("😟 Anxiety or Feeling of Doom", value=False, help="Check this if you often feel anxious or uneasy.")
 
-# Convert toggles to binary (True -> 1, False -> 0)
+# Convert checkbox inputs to binary (True -> 1, False -> 0)
 input_data = np.array([
     int(chest_pain), int(shortness_of_breath), int(irregular_heartbeat),
     int(fatigue), int(dizziness), int(swelling), int(pain_neck), int(sweating),
@@ -71,7 +73,7 @@ input_data = np.array([
 st.divider()
 
 # 🚀 Predict when button is clicked
-if st.button("🔍 Predict Stroke Risk", use_container_width=True):
+if st.button("🔍 Calculate My Stroke Risk", use_container_width=True):
     risk_percentage = GB_model.predict(input_data)[0]
 
     # Ensure risk_percentage is within 0-100 range
@@ -89,6 +91,9 @@ if st.button("🔍 Predict Stroke Risk", use_container_width=True):
         risk_color = "red"
 
     # Display results
-    st.subheader("📊 Prediction Results")
-    st.markdown(f"<h3 style='color:{risk_color};'> {risk_status} ({risk_percentage:.2f}%) </h3>", unsafe_allow_html=True)
+    st.subheader("📊 Your Prediction Results")
+    st.markdown(f"<h3 style='color:{risk_color};'> {risk_status} (Risk Level: {risk_percentage:.2f}%) </h3>", unsafe_allow_html=True)
     st.progress(int(risk_percentage))
+
+    # Additional information
+    st.write("Based on your input, this is your estimated stroke risk. If you have concerns, please consult a healthcare professional.")
