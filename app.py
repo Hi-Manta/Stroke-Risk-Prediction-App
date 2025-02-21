@@ -20,62 +20,80 @@ train = raw_df.drop(["At Risk (Binary)", "Stroke Risk (%)"], axis=1)
 # RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(train, binary_target)
 
 #train XGBRegressor for regression 
-GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
+# GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
 
-# Load your pre-trained models
-try:
-    # with open("RF_model.pkl", "rb") as rf_file:
-    #     RF_model = pickle.load(rf_file)
+# Page Configuration
+st.set_page_config(page_title="Stroke Risk Prediction", page_icon="🧠", layout="wide")
 
-    with open("GB_model.pkl", "rb") as gb_file:
-        GB_model = pickle.load(gb_file)
+# Load trained models
+if not os.path.exists("RF_model.pkl") or not os.path.exists("GB_model.pkl"):
+    st.error("❌ Model files not found! Please train and save the models before running this app.")
+    st.stop()
 
-except FileNotFoundError:
-    st.error("Model files not found! Train and save the models before running this app.")
+with open("GB_model.pkl", "rb") as gb_file:
+    GB_model = pickle.load(gb_file)
 
-# Page title
-st.title("Stroke Risk Prediction")
+# 🌟 UI Improvements
+st.markdown(
+    """
+    <div style="text-align:center;">
+        <h1 style="color:#4A90E2;"> 🧠 Stroke Risk Prediction</h1>
+        <p style="font-size:18px;">Enter your health details below, and our AI will predict your stroke risk.</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# Collect user input
-st.header("Enter Patient Details")
+st.divider()
 
-age = st.number_input("Age", min_value=18, max_value=100, step=1)
+# 💡 User-friendly Input Form
+st.subheader("📝 Patient Information")
 
-# Binary inputs (0 = No, 1 = Yes)
-chest_pain = st.radio("Chest Pain", [0, 1])
-shortness_of_breath = st.radio("Shortness of Breath", [0, 1])
-irregular_heartbeat = st.radio("Irregular Heartbeat", [0, 1])
-fatigue = st.radio("Fatigue & Weakness", [0, 1])
-dizziness = st.radio("Dizziness", [0, 1])
-swelling = st.radio("Swelling (Edema)", [0, 1])
-pain_neck = st.radio("Pain in Neck/Jaw/Shoulder/Back", [0, 1])
-sweating = st.radio("Excessive Sweating", [0, 1])
-cough = st.radio("Persistent Cough", [0, 1])
-nausea = st.radio("Nausea/Vomiting", [0, 1])
-high_bp = st.radio("High Blood Pressure", [0, 1])
-chest_discomfort = st.radio("Chest Discomfort (Activity)", [0, 1])
-cold_hands = st.radio("Cold Hands/Feet", [0, 1])
-sleep_apnea = st.radio("Snoring/Sleep Apnea", [0, 1])
-anxiety = st.radio("Anxiety/Feeling of Doom", [0, 1])
+col1, col2 = st.columns(2)
 
-# Combine inputs into an array
+with col1:
+    age = st.slider("📅 Age", min_value=18, max_value=100, value=30, step=1)
+
+    chest_pain = st.toggle("❤️ Chest Pain")
+    shortness_of_breath = st.toggle("💨 Shortness of Breath")
+    irregular_heartbeat = st.toggle("💓 Irregular Heartbeat")
+    fatigue = st.toggle("😴 Fatigue & Weakness")
+    dizziness = st.toggle("🌀 Dizziness")
+    swelling = st.toggle("💧 Swelling (Edema)")
+    pain_neck = st.toggle("🤕 Pain in Neck/Jaw/Shoulder/Back")
+
+with col2:
+    sweating = st.toggle("💦 Excessive Sweating")
+    cough = st.toggle("🤧 Persistent Cough")
+    nausea = st.toggle("🤢 Nausea/Vomiting")
+    high_bp = st.toggle("🩸 High Blood Pressure")
+    chest_discomfort = st.toggle("💔 Chest Discomfort (Activity)")
+    cold_hands = st.toggle("❄️ Cold Hands/Feet")
+    sleep_apnea = st.toggle("😴 Snoring/Sleep Apnea")
+    anxiety = st.toggle("😟 Anxiety/Feeling of Doom")
+
+# Convert toggles to binary (True -> 1, False -> 0)
 input_data = np.array([
-    chest_pain, shortness_of_breath, irregular_heartbeat,
-    fatigue, dizziness, swelling, pain_neck, sweating, 
-    cough, nausea, high_bp, chest_discomfort, cold_hands, 
-    sleep_apnea, anxiety, age
+    int(chest_pain), int(shortness_of_breath), int(irregular_heartbeat),
+    int(fatigue), int(dizziness), int(swelling), int(pain_neck), int(sweating),
+    int(cough), int(nausea), int(high_bp), int(chest_discomfort), int(cold_hands),
+    int(sleep_apnea), int(anxiety), age
 ]).reshape(1, -1)
 
-# Predict when the button is clicked
-if st.button("Predict Stroke Risk"):
-    try:
-        # risk_binary = RF_model.predict(input_data)[0]
-        risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
+st.divider()
 
-        # Display results
-        st.subheader("Prediction Results")
-        # st.write(f"**At Risk (Binary)**: {'Yes' if risk_binary == 1 else 'No'}")
-        st.write(f"**Stroke Risk (%)**: {risk_percentage:.2f}%")
+# 🚀 Predict when button is clicked
+if st.button("🔍 Predict Stroke Risk", use_container_width=True):
+    risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
+
+    st.subheader("📊 Prediction Results")
     
-    except Exception as e:
-        st.error(f"Error in prediction: {e}")
+    # 🎯 Stroke Risk (Binary)
+    if risk_binary == 1:
+        st.markdown('<p style="color:red; font-size:22px;">⚠️ High Risk of Stroke!</p>', unsafe_allow_html=True)
+    else:
+        st.markdown('<p style="color:green; font-size:22px;">✅ Low Risk of Stroke</p>', unsafe_allow_html=True)
+
+    # 📈 Stroke Risk Percentage
+    st.progress(int(risk_percentage))
+    st.write(f"🩺 **Estimated Stroke Risk:** **{risk_percentage:.2f}%**")
