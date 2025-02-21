@@ -23,11 +23,15 @@ RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_sample
 GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
 
 # Load your pre-trained models
-with open("RF_model.pkl", "rb") as rf_file:
-    RF_model = pickle.load(rf_file)
+try:
+    with open("RF_model.pkl", "rb") as rf_file:
+        RF_model = pickle.load(rf_file)
 
-with open("GB_model.pkl", "rb") as gb_file:
-    GB_model = pickle.load(gb_file)
+    with open("GB_model.pkl", "rb") as gb_file:
+        GB_model = pickle.load(gb_file)
+
+except FileNotFoundError:
+    st.error("Model files not found! Train and save the models before running this app.")
 
 # Page title
 st.title("Stroke Risk Prediction")
@@ -64,10 +68,14 @@ input_data = np.array([
 
 # Predict when the button is clicked
 if st.button("Predict Stroke Risk"):
-    risk_binary = RF_model.predict(input_data)[0]
-    risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
+    try:
+        risk_binary = RF_model.predict(input_data)[0]
+        risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
 
-    # Display results
-    st.subheader("Prediction Results")
-    st.write(f"**At Risk (Binary)**: {'Yes' if risk_binary == 1 else 'No'}")
-    st.write(f"**Stroke Risk (%)**: {risk_percentage:.2f}%")
+        # Display results
+        st.subheader("Prediction Results")
+        st.write(f"**At Risk (Binary)**: {'Yes' if risk_binary == 1 else 'No'}")
+        st.write(f"**Stroke Risk (%)**: {risk_percentage:.2f}%")
+    
+    except Exception as e:
+        st.error(f"Error in prediction: {e}")
