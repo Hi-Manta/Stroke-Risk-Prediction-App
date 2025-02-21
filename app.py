@@ -89,12 +89,6 @@ if st.button("🔍 Predict Stroke Risk", use_container_width=True):
 
     st.subheader("📊 Prediction Results")
     
-    # 🎯 Stroke Risk (Binary)
-    if risk_binary == 1:
-        st.markdown('<p style="color:red; font-size:22px;">⚠️ High Risk of Stroke!</p>', unsafe_allow_html=True)
-    else:
-        st.markdown('<p style="color:green; font-size:22px;">✅ Low Risk of Stroke</p>', unsafe_allow_html=True)
-
     # 📈 Stroke Risk Percentage
     st.progress(int(risk_percentage))
     st.write(f"🩺 **Estimated Stroke Risk:** **{risk_percentage:.2f}%**")
