@@ -85,8 +85,7 @@ st.divider()
 
 # 🚀 Predict when button is clicked
 if st.button("🔍 Predict Stroke Risk", use_container_width=True):
-    risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
-
+    risk_percentage = GB_model.predict(input_data)[0]
     st.subheader("📊 Prediction Results")
 
     # Ensure risk_percentage is within 0-100 range
