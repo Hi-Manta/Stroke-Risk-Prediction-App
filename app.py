@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.ensemble import RandomForestClassifier
+# from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBRegressor
 
 #create raw dataset
@@ -16,16 +16,16 @@ risk_target = raw_df["Stroke Risk (%)"]
 #remove target columns from training dataset
 train = raw_df.drop(["At Risk (Binary)", "Stroke Risk (%)"], axis=1)
 
-#train RandomForestClassifier for classification
-RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(train, binary_target)
+# #train RandomForestClassifier for classification
+# RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(train, binary_target)
 
 #train XGBRegressor for regression 
 GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
 
 # Load your pre-trained models
 try:
-    with open("RF_model.pkl", "rb") as rf_file:
-        RF_model = pickle.load(rf_file)
+    # with open("RF_model.pkl", "rb") as rf_file:
+    #     RF_model = pickle.load(rf_file)
 
     with open("GB_model.pkl", "rb") as gb_file:
         GB_model = pickle.load(gb_file)
@@ -69,12 +69,12 @@ input_data = np.array([
 # Predict when the button is clicked
 if st.button("Predict Stroke Risk"):
     try:
-        risk_binary = RF_model.predict(input_data)[0]
+        # risk_binary = RF_model.predict(input_data)[0]
         risk_percentage = GB_model.predict(input_data)[0] * 100  # Convert to percentage
 
         # Display results
         st.subheader("Prediction Results")
-        st.write(f"**At Risk (Binary)**: {'Yes' if risk_binary == 1 else 'No'}")
+        # st.write(f"**At Risk (Binary)**: {'Yes' if risk_binary == 1 else 'No'}")
         st.write(f"**Stroke Risk (%)**: {risk_percentage:.2f}%")
     
     except Exception as e:
