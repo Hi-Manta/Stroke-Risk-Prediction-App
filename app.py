@@ -27,7 +27,7 @@ train = raw_df.drop(["At Risk (Binary)", "Stroke Risk (%)"], axis=1)
 st.set_page_config(page_title="Stroke Risk Prediction", page_icon="🧠", layout="wide")
 
 # Load trained models
-if not os.path.exists("RF_model.pkl") or not os.path.exists("GB_model.pkl"):
+if not os.path.exists("GB_model.pkl"):
     st.error("❌ Model files not found! Please train and save the models before running this app.")
     st.stop()
 
