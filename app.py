@@ -90,8 +90,8 @@ if st.button("🔍 Predict Stroke Risk", use_container_width=True):
     st.subheader("📊 Prediction Results")
 
     # Ensure risk_percentage is within 0-100 range
-    scaled_risk_percentage = min(max(risk_percentage, 0), 100)
+    risk_percentage = np.clip(risk_percentage, 0, 100)
     # Display progress bar
-    st.progress(int(scaled_risk_percentage))
+    st.progress(int(risk_percentage))
     # Display risk percentage
     st.write(f"🩺 **Estimated Stroke Risk:** **{risk_percentage:.2f}%**")
