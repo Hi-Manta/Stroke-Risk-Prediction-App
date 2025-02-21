@@ -14,7 +14,6 @@ This is a **Stroke Risk Prediction** web app built with **Streamlit**. The app a
 ## 🏗️ Tech Stack
 - **Backend:** XGBoost, NumPy, Pandas
 - **Frontend:** Streamlit
-- **Deployment:** (To be added if deployed)
 
 ## 📂 Project Structure
 ```
@@ -58,14 +57,10 @@ If you need to train a new model, modify and run the training script (not includ
 ## 🤝 Contributing
 Feel free to fork this repository, open issues, or submit pull requests!
 
-## 📜 License
-This project is licensed under the **MIT License**.
-
 ---
 ### 💡 Connect with Me
-📧 Email: your.email@example.com  
-🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle)  
-🔗 LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+📧 Email: z.a.n.himanta@gmail.com   
+🔗 LinkedIn: [My Profile]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/zahid-al-noor-himanta/))
 
 **⭐ Don't forget to give this repo a star if you found it useful! ⭐**
 
