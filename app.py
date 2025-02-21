@@ -38,34 +38,29 @@ st.subheader("📝 Patient Information")
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.slider("📅 Age", min_value=18, max_value=100, value=30, step=1)
+    age = st.slider("📅 Age (years)", min_value=18, max_value=100, value=30, step=1, help="Select your age.")
 
-    chest_pain = st.toggle("❤️ Chest Pain")
-    shortness_of_breath = st.toggle("💨 Shortness of Breath")
-    irregular_heartbeat = st.toggle("💓 Irregular Heartbeat")
-    fatigue = st.toggle("😴 Fatigue & Weakness")
-    dizziness = st.toggle("🌀 Dizziness")
-    swelling = st.toggle("💧 Swelling (Edema)")
-    pain_neck = st.toggle("🤕 Pain in Neck/Jaw/Shoulder/Back")
+    st.markdown("**Health Symptoms** (Toggle if present)")
+    chest_pain = st.checkbox("❤️ Chest Pain", value=False, help="Do you experience any chest pain?")
+    shortness_of_breath = st.checkbox("💨 Shortness of Breath", value=False, help="Do you feel short of breath?")
+    irregular_heartbeat = st.checkbox("💓 Irregular Heartbeat", value=False, help="Do you have irregular heartbeats?")
+    fatigue = st.checkbox("😴 Fatigue & Weakness", value=False, help="Do you often feel fatigued or weak?")
+    dizziness = st.checkbox("🌀 Dizziness", value=False, help="Do you experience dizziness?")
+    swelling = st.checkbox("💧 Swelling (Edema)", value=False, help="Do you have swelling in your legs or feet?")
+    pain_neck = st.checkbox("🤕 Pain in Neck/Jaw/Shoulder/Back", value=False, help="Do you feel pain in your neck, jaw, shoulder, or back?")
 
 with col2:
-    sweating = st.toggle("💦 Excessive Sweating")
-    cough = st.toggle("🤧 Persistent Cough")
-    nausea = st.toggle("🤢 Nausea/Vomiting")
-    high_bp = st.toggle("🩸 High Blood Pressure")
-    chest_discomfort = st.toggle("💔 Chest Discomfort (Activity)")
-    cold_hands = st.toggle("❄️ Cold Hands/Feet")
-    sleep_apnea = st.toggle("😴 Snoring/Sleep Apnea")
-    anxiety = st.toggle("😟 Anxiety/Feeling of Doom")
+    st.markdown("**Other Symptoms** (Toggle if present)")
+    sweating = st.checkbox("💦 Excessive Sweating", value=False, help="Do you sweat excessively?")
+    cough = st.checkbox("🤧 Persistent Cough", value=False, help="Do you have a persistent cough?")
+    nausea = st.checkbox("🤢 Nausea/Vomiting", value=False, help="Do you feel nauseous or have vomiting?")
+    high_bp = st.checkbox("🩸 High Blood Pressure", value=False, help="Have you been diagnosed with high blood pressure?")
+    chest_discomfort = st.checkbox("💔 Chest Discomfort (Activity)", value=False, help="Do you feel discomfort in your chest during physical activity?")
+    cold_hands = st.checkbox("❄️ Cold Hands/Feet", value=False, help="Do you have cold hands or feet?")
+    sleep_apnea = st.checkbox("😴 Snoring/Sleep Apnea", value=False, help="Do you snore or have sleep apnea?")
+    anxiety = st.checkbox("😟 Anxiety/Feeling of Doom", value=False, help="Do you feel anxious or have a feeling of doom?")
 
 # Convert toggles to binary (True -> 1, False -> 0)
-feature_order = [
-    "Chest Pain", "Shortness of Breath", "Irregular Heartbeat", "Fatigue & Weakness",
-    "Dizziness", "Swelling (Edema)", "Pain in Neck/Jaw/Shoulder/Back", "Excessive Sweating",
-    "Persistent Cough", "Nausea/Vomiting", "High Blood Pressure", "Chest Discomfort (Activity)",
-    "Cold Hands/Feet", "Snoring/Sleep Apnea", "Anxiety/Feeling of Doom", "Age"
-]
-
 input_data = np.array([
     int(chest_pain), int(shortness_of_breath), int(irregular_heartbeat),
     int(fatigue), int(dizziness), int(swelling), int(pain_neck), int(sweating),
