@@ -4,35 +4,20 @@ import pandas as pd
 import numpy as np
 import pickle
 import os
-# from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBRegressor
-
-#create raw dataset
-raw_df = pd.read_csv("stroke_risk_dataset.csv")
-
-#create target datasets
-binary_target = raw_df["At Risk (Binary)"]
-risk_target = raw_df["Stroke Risk (%)"]
-
-#remove target columns from training dataset
-train = raw_df.drop(["At Risk (Binary)", "Stroke Risk (%)"], axis=1)
-
-# #train RandomForestClassifier for classification
-# RF_model = RandomForestClassifier(n_estimators=200, max_features=0.1, min_samples_split=5, min_samples_leaf=2, max_samples= 50000).fit(train, binary_target)
-
-#train XGBRegressor for regression 
-# GB_model = XGBRegressor(random_state=42, learning_rate=0.1, n_estimators=250).fit(train, risk_target)
 
 # Page Configuration
 st.set_page_config(page_title="Stroke Risk Prediction", page_icon="🧠", layout="wide")
 
-# Load trained models
-if not os.path.exists("GB_model.pkl"):
-    st.error("❌ Model files not found! Please train and save the models before running this app.")
-    st.stop()
+# Load trained model
+model_path = "GB_model.pkl"
 
-with open("GB_model.pkl", "rb") as gb_file:
-    GB_model = pickle.load(gb_file)
+if os.path.exists(model_path):
+    with open(model_path, "rb") as gb_file:
+        GB_model = pickle.load(gb_file)
+else:
+    st.error("❌ Model file not found! Please train and save the model before running this app.")
+    st.stop()
 
 # 🌟 UI Improvements
 st.markdown(
@@ -74,6 +59,13 @@ with col2:
     anxiety = st.toggle("😟 Anxiety/Feeling of Doom")
 
 # Convert toggles to binary (True -> 1, False -> 0)
+feature_order = [
+    "Chest Pain", "Shortness of Breath", "Irregular Heartbeat", "Fatigue & Weakness",
+    "Dizziness", "Swelling (Edema)", "Pain in Neck/Jaw/Shoulder/Back", "Excessive Sweating",
+    "Persistent Cough", "Nausea/Vomiting", "High Blood Pressure", "Chest Discomfort (Activity)",
+    "Cold Hands/Feet", "Snoring/Sleep Apnea", "Anxiety/Feeling of Doom", "Age"
+]
+
 input_data = np.array([
     int(chest_pain), int(shortness_of_breath), int(irregular_heartbeat),
     int(fatigue), int(dizziness), int(swelling), int(pain_neck), int(sweating),
@@ -86,11 +78,22 @@ st.divider()
 # 🚀 Predict when button is clicked
 if st.button("🔍 Predict Stroke Risk", use_container_width=True):
     risk_percentage = GB_model.predict(input_data)[0]
-    st.subheader("📊 Prediction Results")
 
     # Ensure risk_percentage is within 0-100 range
     risk_percentage = np.clip(risk_percentage, 0, 100)
-    # Display progress bar
+
+    # Display risk level based on percentage
+    if risk_percentage < 20:
+        risk_status = "🟢 Low Risk"
+        risk_color = "green"
+    elif risk_percentage < 50:
+        risk_status = "🟡 Moderate Risk"
+        risk_color = "orange"
+    else:
+        risk_status = "🔴 High Risk"
+        risk_color = "red"
+
+    # Display results
+    st.subheader("📊 Prediction Results")
+    st.markdown(f"<h3 style='color:{risk_color};'> {risk_status} ({risk_percentage:.2f}%) </h3>", unsafe_allow_html=True)
     st.progress(int(risk_percentage))
-    # Display risk percentage
-    st.write(f"🩺 **Estimated Stroke Risk:** **{risk_percentage:.2f}%**")
