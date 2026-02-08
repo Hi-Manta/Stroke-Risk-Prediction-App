@@ -52,7 +52,7 @@ If you need to train a new model, modify and run the training script (not includ
 ## 🚀 Future Enhancements
 - [ ] Add real-time model training within the app
 - [ ] Deploy on **Streamlit Cloud** or **Render**
-- [ ] Improve dataset with more features for better accuracy
+- [ ] Improve the dataset with more features for better accuracy
 
 ## 🤝 Contributing
 Feel free to fork this repository, open issues, or submit pull requests!
@@ -60,7 +60,7 @@ Feel free to fork this repository, open issues, or submit pull requests!
 ---
 ### 💡 Connect with Me
 📧 Email: z.a.n.himanta@gmail.com   
-🔗 LinkedIn: [My Profile]([https://linkedin.com/in/yourprofile](https://www.linkedin.com/in/zahid-al-noor-himanta/))
+🔗 LinkedIn: [Zahid Al Noor Himanta](https://www.linkedin.com/in/zahid-al-noor-himanta/)
 
 **⭐ Don't forget to give this repo a star if you found it useful! ⭐**
 
